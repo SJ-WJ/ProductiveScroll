@@ -1,3 +1,3 @@
-export default function FeedPage() {
-  return <h1>Feed</h1>;
+export default function TagsPage() {
+  return <h1>Tags</h1>;
 }

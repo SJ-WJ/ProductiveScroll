@@ -1,3 +1,3 @@
-export default function FeedPage() {
-  return <h1>Feed</h1>;
+export default function LoginPage() {
+  return <h1>Login</h1>;
 }
