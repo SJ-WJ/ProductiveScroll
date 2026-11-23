@@ -2,8 +2,8 @@ import { useState, type FormEvent } from "react";
 import { Navigate, useNavigate } from "react-router";
 import Logo from "../components/Logo";
 import ScrollingWall from "../components/ScrollingWall";
-import { supabase } from "./lib/supabase";
-import { useSession } from "./lib/useSession";
+import { supabase } from "../lib/supabase";
+import { useSession } from "../lib/useSession";
 
 const labelClass = "text-[13px] font-medium";
 const inputClass = "h-11 rounded-field border bg-white px-3.5 text-sm focus:border-indigo-600 focus:outline-none";

@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router";
-import { useSession } from "../pages/lib/useSession";
+import { useSession } from "../lib/useSession";
 
 export default function RequireAuth() {
   const session = useSession();
