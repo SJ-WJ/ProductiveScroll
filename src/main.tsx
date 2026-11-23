@@ -10,19 +10,26 @@ import BoardPage from "./pages/BoardPage";
 import TagsPage from "./pages/TagsPage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import RequireAuth from "./components/RequireAuth";
 
 const router = createBrowserRouter([
+  { path: "/login", element: <LoginPage />},
+
   {
-    element: <AppLayout />,
+    element: <RequireAuth />,
     children: [
-      { index: true, element: <FeedPage /> },
-      { path: "boards", element: <BoardsPage /> },
-      { path: "tags", element: <TagsPage /> },
+      {
+        element: <AppLayout />,
+        children: [
+          { index: true, element: <FeedPage /> },
+          { path: "boards", element: <BoardsPage /> },
+          { path: "tags", element: <TagsPage /> },
+        ],
+      },
+      { path: "/boards/:boardId", element: <BoardPage /> },
     ],
   },
-  { path: "/login", element: <LoginPage /> },
-  { path: "/boards/:boardId", element: <BoardPage /> },
-  { path: "*", element: <NotFoundPage /> },
+  {path: "*", element: <NotFoundPage />}
 ]);
 
 createRoot(document.getElementById("root")!).render(

@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router";
 import Logo from "../components/Logo";
+import { supabase } from "../pages/lib/supabase";
 
 const link = ({ isActive }: { isActive: boolean }) =>
   `rounded-md px-3 py-2 text-sm ${ isActive ? "bg-zinc-100 font-medium text-zinc-900" : "text-zinc-600 hover:bg-zinc-50" }`;
@@ -15,6 +16,9 @@ export default function AppLayout() {
         <NavLink to="/boards" className={link}>Boards</NavLink>
         <NavLink to="/tags" className={link}>Tags</NavLink>
         <NavLink to="/boards/demo" className={link}>Demo board</NavLink>
+        <button type="button" onClick={() => supabase.auth.signOut()} className="mt-auto rounded-md px-3 py-2 text-left text-smmtext-zonc-600 hover:bg-zonc-50">
+          LogOut
+        </button>
       </nav>
       <main className="flex-1 p-8">
         <Outlet />

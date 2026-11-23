@@ -1,24 +1,43 @@
 import { useState, type FormEvent } from "react";
+import { Navigate, useNavigate } from "react-router";
 import Logo from "../components/Logo";
 import ScrollingWall from "../components/ScrollingWall";
+import { supabase } from "./lib/supabase";
+import { useSession } from "./lib/useSession";
 
 const labelClass = "text-[13px] font-medium";
 const inputClass = "h-11 rounded-field border bg-white px-3.5 text-sm focus:border-indigo-600 focus:outline-none";
 const linkClass = "font-medium text-indigo-600 hover:text-indigo-800";
 
 export default function LoginPage() {
+  const session = useSession();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (isLogin) setError("Incorrect email or password.");
+    const form = new FormData(e.currentTarget);
+    const credentials = { email: String(form.get("email")), password: String(form.get("password"))};
+
+    setBusy(true);
+    setError("");
+    const { error } = isLogin
+      ? await supabase.auth.signInWithPassword(credentials)
+      : await supabase.auth.signUp(credentials)
+    setBusy(false)
+    
+    if (error) setError(isLogin ? "Incorrect email or password" : error.message);
+    else navigate("/");
   }
 
   function toggleMode() {
     setIsLogin(!isLogin);
     setError("");
   }
+
+  if (session) return <Navigate to="/" replace />;
 
   return (
     <div className="flex min-h-screen flex-wrap bg-paper text-zinc-900">
@@ -45,7 +64,7 @@ export default function LoginPage() {
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor="email" className={labelClass}>Email</label>
-            <input id="email" type="email" required autoComplete="email" placeholder="you@example.com" className={`${inputClass} border-zinc-300`} />
+            <input id="email" name="email" type="email" required autoComplete="email" placeholder="you@example.com" className={`${inputClass} border-zinc-300`} />
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -55,6 +74,7 @@ export default function LoginPage() {
             </div>
             <input
               id="password"
+              name="password"
               type="password"
               required
               minLength={8}
@@ -74,8 +94,8 @@ export default function LoginPage() {
             )}
           </div>
 
-          <button type="submit" className="h-12 rounded-full bg-indigo-600 text-[15px] font-semibold text-white hover:bg-indigo-700">
-            {isLogin ? "Log in" : "Create account"}
+          <button type="submit" disabled={busy} className="h-12 rounded-full bg-indigo-600 text-[15px] font-semibold text-white hover:bg-indigo-700 disabled:opacity-60">
+            {busy ? "One moment please" : isLogin ? "Log In" : "Create your account"}
           </button>
 
           <p className="text-center text-sm text-muted">
